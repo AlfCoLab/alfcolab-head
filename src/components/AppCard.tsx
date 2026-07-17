@@ -1,7 +1,5 @@
 import { Link } from 'react-router-dom';
-import { ArrowRight } from 'lucide-react';
 import type { AppEntry } from '../types';
-import { getStatusConfig } from '../lib/apps';
 import { StatusBadge } from './StatusBadge';
 
 /**

@@ -1,5 +1,4 @@
-import { Link } from 'react-router-dom';
-import { Heart } from 'lucide-react';
+
 
 /**
  * Footer — calm, minimal. Contacts, legal links, and a small brand seal.

@@ -1,8 +1,5 @@
-import { Link } from 'react-router-dom';
-import { ArrowRight } from 'lucide-react';
 import { getCatalogApps } from '../lib/apps';
 import { useDocumentMeta } from '../hooks/useDocumentMeta';
-import { AppsOrbit } from '../components/AppsOrbit';
 import { AppCard } from '../components/AppCard';
 /**
  * HomePage — `/`
