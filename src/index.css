@@ -1,0 +1,92 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Sans+3:ital,wght@0,400;0,500;0,600;1,400&display=swap');
+@import 'tailwindcss';
+
+/*
+ * Alfcolab — Dolce Vita (Tuscany) palette.
+ * Authoritative source: delivered brand vectors (google_v3) and
+ * preview_alf_elements.html. Warm, creamy, calm — "Calm Productivity".
+ */
+@theme {
+  /* Surfaces & text */
+  --color-canvas: #faf5ec; /* page background — warm cream */
+  --color-card: #fffdf9; /* card surface — off-white */
+  --color-line: #e8e6e1; /* subtle UI fills */
+  --color-edge: #d3cfc5; /* visible borders */
+  --color-ink: #0f212e; /* primary text — deep slate */
+  --color-ink-soft: #41525f; /* secondary text */
+
+  /* Brand accents */
+  --color-clay: #e05e26; /* terracotta — the focus accent */
+  --color-clay-soft: #f0e2d6; /* terracotta tint surface */
+  --color-moss: #596a4c; /* muted olive green */
+
+  /* Status accents (used by StatusBadge) */
+  --color-ready: #596a4c; /* calm green */
+  --color-beta: #c9912f; /* warm amber */
+  --color-dev: #8a857a; /* muted grey */
+
+  /* Typography roles */
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-body: 'Source Sans 3', 'Source Sans Pro', system-ui, sans-serif;
+
+  /* Radii — Soft UI, rounded but not pillowy */
+  --radius-card: 14px;
+  --radius-soft: 10px;
+  --radius-line: 3px;
+
+  /* Shadows — extremely subtle, tinted with ink */
+  --shadow-card: 0 1px 0 rgba(15, 33, 46, 0.04);
+  --shadow-lift: 0 6px 24px rgba(15, 33, 46, 0.08);
+
+  /* Orbit animation */
+  --animate-spin-slow: orbit-spin 60s linear infinite;
+}
+
+@keyframes orbit-spin {
+  from {
+    transform: rotateY(0deg);
+  }
+  to {
+    transform: rotateY(360deg);
+  }
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    background-color: var(--color-canvas);
+    color: var(--color-ink);
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-sans);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-clay);
+    outline-offset: 2px;
+    border-radius: var(--radius-line);
+  }
+}
+
+/* Honor users who prefer no motion: freeze the orbit, no smooth scroll. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
