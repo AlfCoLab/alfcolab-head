@@ -37,6 +37,7 @@
   /* Shadows — extremely subtle, tinted with ink */
   --shadow-card: 0 1px 0 rgba(15, 33, 46, 0.04);
   --shadow-lift: 0 6px 24px rgba(15, 33, 46, 0.08);
+  --shadow-retro: 4px 4px 0 var(--color-clay);
 
   /* Orbit animation */
   --animate-spin-slow: orbit-spin 60s linear infinite;

@@ -19,49 +19,40 @@ interface AppCardProps {
 }
 
 export function AppCard({ app, compact = false }: AppCardProps) {
-  const config = getStatusConfig(app.status);
+  // Convert hex accent color to a very light transparent background for the icon box
+  const iconBg = app.accentColor.startsWith('#') 
+    ? `${app.accentColor}20` 
+    : 'rgba(217, 119, 6, 0.1)';
 
   return (
     <Link
       to={`/app/${app.slug}`}
       aria-label={`${app.name} — ${app.shortDescription}`}
-      className={[
-        'group relative flex flex-col overflow-hidden rounded-card bg-card border border-edge',
-        'shadow-card transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lift',
-        'focus-visible:-translate-y-0.5',
-        compact ? 'w-60 p-4' : 'p-6',
-      ].join(' ')}
+      className="group relative flex flex-col rounded-[18px] bg-card border-[2px] border-[#e05e26]/30 p-6 transition-all duration-200 hover:-translate-y-1"
+      style={{ boxShadow: 'var(--shadow-retro)' }}
     >
-      {/* Accent top bar — the app's own color, visible at a glance */}
-      <span
-        className="absolute inset-x-0 top-0 h-1"
-        style={{ backgroundColor: app.accentColor }}
-        aria-hidden="true"
-      />
-
-      <div className="flex items-start justify-between gap-3">
-        <div className="min-w-0">
-          <h3 className={`font-sans font-semibold text-ink ${compact ? 'text-base' : 'text-lg'}`}>
-            {app.name}
-          </h3>
-          <p className="mt-0.5 text-xs uppercase tracking-wide text-ink-soft/70">
-            {app.humanActivity}
-          </p>
+      <div className="flex items-start justify-between gap-3 mb-4">
+        {/* Icon Box */}
+        <div 
+          className="flex h-12 w-12 items-center justify-center rounded-xl"
+          style={{ backgroundColor: iconBg, color: app.accentColor }}
+        >
+          {/* We'll just render a placeholder icon if we don't have lucide icons mapped in data, or use a generic one */}
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+            <path d="M9 12l2 2 4-4"></path>
+          </svg>
         </div>
         <StatusBadge app={app} />
       </div>
 
-      <p className={`mt-3 text-ink-soft ${compact ? 'text-sm line-clamp-2' : 'text-sm'}`}>
-        {app.shortDescription}
-      </p>
-
-      <div className="mt-auto flex items-center pt-4">
-        <span
-          className={`inline-flex items-center gap-1.5 text-sm font-medium ${config.textClass} transition-all group-hover:gap-2.5`}
-        >
-          {config.cta}
-          <ArrowRight size={14} strokeWidth={2.25} />
-        </span>
+      <div className="min-w-0">
+        <h3 className="font-sans font-bold text-ink text-[19px] tracking-tight">
+          {app.name}
+        </h3>
+        <p className="mt-2 text-[14px] leading-[1.5] text-ink-soft">
+          {app.shortDescription}
+        </p>
       </div>
     </Link>
   );

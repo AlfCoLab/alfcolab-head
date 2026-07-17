@@ -14,47 +14,46 @@ export function Layout() {
     <div className="flex min-h-screen flex-col">
       <BrandThroughline />
 
-      <header className="sticky top-0 z-30 border-b border-edge/60 bg-canvas/80 backdrop-blur-sm">
+      <header className="sticky top-0 z-30 pt-6">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-          <Link to="/" className="flex items-center gap-2.5 group">
-            {/* Mini capybara disc wordmark */}
-            <span
-              className="flex h-9 w-9 items-center justify-center rounded-full bg-card border border-edge shadow-card transition-transform group-hover:scale-105"
-              aria-hidden="true"
-            >
-              <svg width="22" height="22" viewBox="0 0 40 40">
-                <circle cx="20" cy="20" r="13" fill="#E0BD96" />
-                <ellipse cx="13" cy="15" rx="3" ry="2.5" fill="#C99E7A" />
-                <ellipse cx="27" cy="15" rx="3" ry="2.5" fill="#C99E7A" />
-                <ellipse cx="20" cy="20" rx="4" ry="3" fill="#E05E26" />
-                <path
-                  d="M15 17 q2 -1.5 4 0 M21 17 q2 -1.5 4 0"
-                  stroke="#0F212E"
-                  strokeWidth="1.4"
-                  strokeLinecap="round"
-                  fill="none"
-                />
-              </svg>
-            </span>
-            <span className="font-sans text-lg font-semibold tracking-tight text-ink">
-              Alfcolab
+          <Link to="/" className="flex items-center gap-2 group text-clay hover:opacity-80 transition-opacity">
+            <span className="font-sans text-xl font-bold tracking-tight">
+              Alf & Co Solutions
             </span>
           </Link>
 
-          <nav aria-label="Primary" className="flex items-center gap-6 text-sm">
+          <nav aria-label="Primary" className="hidden md:flex items-center gap-8 text-[15px] font-medium text-ink">
+            <Link
+              to="/"
+              className="text-clay border-b-2 border-clay pb-1"
+            >
+              Dashboard
+            </Link>
             <Link
               to="/apps"
-              className="text-ink-soft hover:text-clay transition-colors"
+              className="hover:text-clay transition-colors"
             >
-              Apps
+              Services
             </Link>
-            <Link
-              to="/app/verbio"
-              className="text-ink-soft hover:text-clay transition-colors"
-            >
-              Verbio
-            </Link>
+            <span className="hover:text-clay transition-colors cursor-pointer">
+              Projects
+            </span>
+            <span className="hover:text-clay transition-colors flex items-center gap-1 cursor-pointer">
+              Resources
+              <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M1 1L5 5L9 1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </span>
           </nav>
+
+          <div className="flex items-center">
+            <a 
+              href="https://alfcolab.com/admin_login.php" 
+              className="px-5 py-2 rounded-lg border border-[#e05e26]/30 bg-[#f0e2d6]/50 text-ink font-medium text-[15px] hover:bg-[#e05e26]/10 transition-colors"
+            >
+              Log In
+            </a>
+          </div>
         </div>
       </header>
 
