@@ -54,7 +54,7 @@ export function AppsOrbit({ apps }: AppsOrbitProps) {
               key={app.slug}
               className="orbit-card absolute left-1/2 top-1/2"
               style={{
-                transform: `rotateY(${angle}deg) translateZ(${radius}px) translate(-50%, -50%)`,
+                transform: `translate(-50%, -50%) rotateY(${angle}deg) translateZ(${radius}px)`,
               }}
             >
               {/* Counter-rotate so the card faces outward. The negative ring
