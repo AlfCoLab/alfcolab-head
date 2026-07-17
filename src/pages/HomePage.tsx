@@ -4,8 +4,6 @@ import { getCatalogApps } from '../lib/apps';
 import { useDocumentMeta } from '../hooks/useDocumentMeta';
 import { AppsOrbit } from '../components/AppsOrbit';
 import { AppCard } from '../components/AppCard';
-import { CapybaraMark } from '../components/CapybaraMark';
-
 /**
  * HomePage — `/`
  *
@@ -62,7 +60,11 @@ export function HomePage() {
       {/* Mobile hero mascot + grid — replaces the orbit on small screens */}
       <section className="mx-auto max-w-6xl px-6 pt-12 lg:hidden">
         <div className="flex flex-col items-center text-center">
-          <CapybaraMark size={140} />
+          <img
+            src="/capybara-hero.jpg"
+            alt="Alfcolab capybara mascot"
+            className="h-[140px] w-[140px] rounded-full object-cover shadow-lg"
+          />
           <p className="mt-2 font-sans text-xs font-medium uppercase tracking-[0.18em] text-moss">
             Alfcolab
           </p>
@@ -74,11 +76,23 @@ export function HomePage() {
         </div>
       </section>
 
-      {/* Quiet closing line */}
-      <section className="mx-auto max-w-6xl px-6 pt-20 text-center">
-        <p className="mx-auto max-w-md text-sm text-ink-soft/70">
-          Everyday tasks, simple tools, less stress.
-        </p>
+      {/* Banner & Ko-fi */}
+      <section className="mx-auto max-w-6xl px-6 pb-20 pt-20 text-center">
+        <img
+          src="/capybara-banner.jpg"
+          alt="Everyday tasks + Simple tools = Less stress."
+          className="mx-auto w-full max-w-4xl rounded-2xl shadow-xl object-cover"
+        />
+        <div className="mt-8 flex justify-center">
+          <a
+            href="https://ko-fi.com/alfcosolutions"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 rounded-soft bg-[#d97706] px-5 py-2.5 text-sm font-medium text-white shadow-lg hover:bg-[#b45309] transition-all"
+          >
+            Buy us a coffee on Ko-fi
+          </a>
+        </div>
       </section>
     </>
   );

@@ -19,9 +19,9 @@ import { VerbioMark } from '../components/VerbioMark';
  * the app's subdomain.
  *
  * Status logic:
- *   - ready / testing → public page, full content, platform links
- *   - development → requiresAuth; restricted screen until a real Supabase
- *     session exists, then reveals the preview link
+ *   - ready → public page, full content, platform links
+ *   - testing / development → requiresAuth; restricted screen until a real
+ *     Supabase session exists, then reveals the preview/beta link
  */
 export function AppPage() {
   const { slug = '' } = useParams<{ slug: string }>();
@@ -67,9 +67,14 @@ export function AppPage() {
   // Unknown slug → 404. (NotFoundPage sets its own meta.)
   if (!app) return <NotFoundPage />;
 
-  const isDev = app.status === 'development';
   const isAuthenticated = Boolean(session);
-  const showRestricted = isDev && !isAuthenticated;
+  const isAdmin = session?.user?.email === 'alfico2025@gmail.com';
+  const needsAuth = app.status !== 'ready';
+  
+  let showRestricted = needsAuth && !isAuthenticated;
+  if (app.slug === 'verbio') {
+    showRestricted = !isAdmin;
+  }
 
   return (
     <article>
@@ -145,7 +150,9 @@ function accessCopy(status: AppEntryStatus, authenticated: boolean): string {
     case 'ready':
       return 'The production version is available. Public access, no sign-in needed.';
     case 'testing':
-      return 'Beta version — public testing is open. You may hit rough edges; thanks for the patience.';
+      return authenticated
+        ? 'You are signed in. The beta version is available below.'
+        : 'Beta testing is open, but access requires sign-in.';
     case 'development':
       return authenticated
         ? 'You are signed in. A private preview is available below.'

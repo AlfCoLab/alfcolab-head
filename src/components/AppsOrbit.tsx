@@ -1,5 +1,4 @@
 import type { AppEntry } from '../types';
-import { CapybaraMark } from './CapybaraMark';
 import { AppCard } from './AppCard';
 
 /**
@@ -36,10 +35,11 @@ export function AppsOrbit({ apps }: AppsOrbitProps) {
     >
       {/* Center hub — the capybara = Alfcolab */}
       <div className="absolute z-20 flex flex-col items-center">
-        <CapybaraMark size={180} />
-        <p className="mt-3 font-sans text-sm font-medium uppercase tracking-[0.18em] text-moss">
-          Alfcolab
-        </p>
+        <img
+          src="/capybara-hero.jpg"
+          alt="Alfcolab capybara mascot"
+          className="h-[180px] w-[180px] rounded-full object-cover shadow-lg"
+        />
       </div>
 
       {/* The rotating ring */}

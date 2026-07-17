@@ -3,8 +3,8 @@ import type { AppEntry } from '../types';
 import { isSupabaseConfigured } from '../lib/supabase';
 
 /**
- * RestrictedAccess — the gate shown for development-status apps when the
- * visitor is not authenticated.
+ * RestrictedAccess — the gate shown for non-ready apps when the visitor
+ * is not authenticated. Covers both `testing` and `development`.
  *
  * Implements the spec's three messages:
  *   - "Приложение находится в разработке" / This app is in development
@@ -28,10 +28,12 @@ export function RestrictedAccess({ app }: RestrictedAccessProps) {
       </div>
 
       <h3 className="mt-4 font-sans text-xl font-semibold text-ink">
-        {app.name} is in development
+        {app.status === 'testing'
+          ? `${app.name} is in beta testing`
+          : `${app.name} is in development`}
       </h3>
       <p className="mt-2 text-sm text-ink-soft">
-        Access is restricted while we shape this app.
+        Access is restricted. Sign in or request access to continue.
       </p>
 
       <div className="mt-6 flex flex-col items-center gap-3">
