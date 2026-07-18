@@ -24,7 +24,7 @@ export function AppCard({ app }: AppCardProps) {
     <Link
       to={`/app/${app.slug}`}
       aria-label={`${app.name} — ${app.shortDescription}`}
-      className="group relative flex flex-col rounded-[18px] bg-card border-[2px] border-[#e05e26]/30 p-6 transition-all duration-200 hover:-translate-y-1"
+      className="group relative flex flex-col rounded-[18px] bg-card border-[2px] border-[#e05e26]/30 p-6 transition-all duration-300 hover:-translate-y-2 hover:scale-[1.02]"
       style={{ boxShadow: 'var(--shadow-retro)' }}
     >
       <div className="flex items-start justify-between gap-3 mb-4">

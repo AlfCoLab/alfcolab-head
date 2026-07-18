@@ -50,9 +50,26 @@ export function HomePage() {
       {/* Cards Grid */}
       <section className="mx-auto max-w-6xl px-6 pt-24 pb-16">
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {catalog.map((app) => (
+          {catalog.filter(app => app.slug !== 'head').slice(0, 4).map((app) => (
             <AppCard key={app.slug} app={app} />
           ))}
+        </div>
+      </section>
+
+      {/* Ko-fi Banner */}
+      <section className="mx-auto max-w-6xl px-6 pb-24 text-center">
+        <div className="mt-8 flex justify-center">
+          <a
+            href="https://ko-fi.com/alfcosolutions"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 rounded-xl bg-[#d97706] px-6 py-3 text-[15px] font-medium text-white shadow-lg hover:bg-[#b45309] hover:-translate-y-1 transition-all duration-200"
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+              <path d="M23.881 8.948c-.773-4.085-4.859-4.593-4.859-4.593H.723c-.604 0-.679.798-.679.798s-.082 7.324-.022 11.822c.164 2.424 2.586 2.672 2.586 2.672s8.267-.023 11.966-.049c2.438-.426 2.683-2.566 2.658-3.143V14.1s4.444.665 6.138-1.574c1.396-1.848 1.139-3.393.511-3.578zm-5.066 3.652s-3.793.528-3.793.528V6.997s4.453.513 4.453 1.942c0 1.428-1.077 3.661-.66 3.661z"/>
+            </svg>
+            Buy us a coffee on Ko-fi
+          </a>
         </div>
       </section>
     </>
