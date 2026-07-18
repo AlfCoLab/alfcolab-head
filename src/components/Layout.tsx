@@ -5,20 +5,19 @@ import { Footer } from './Footer';
 /**
  * Layout — the neutral Alfcolab chrome shared by every page.
  *
- * Header: small capybara disc wordmark + minimal nav. Per design.md the
- * layout stays neutral so each `/app/:slug` can carry its own accent
- * without the chrome fighting it.
+ * Header: "Alf & Co Solutions" text logo + minimal nav. No Log In button
+ * on the main site — login is only for verbio.alfcolab.com access.
  */
 export function Layout() {
   return (
     <div className="flex min-h-screen flex-col">
       <BrandThroughline />
 
-      <header className="sticky top-0 z-30 pt-6">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
+      <header className="sticky top-0 z-30 bg-canvas/80 backdrop-blur-sm">
+        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
           <Link to="/" className="flex items-center gap-2 group text-clay hover:opacity-80 transition-opacity">
             <span className="font-sans text-xl font-bold tracking-tight">
-              Alf & Co Solutions
+              Alf &amp; Co Solutions
             </span>
           </Link>
 
@@ -40,20 +39,11 @@ export function Layout() {
             </span>
             <span className="hover:text-clay transition-colors flex items-center gap-1 cursor-pointer">
               Resources
-              <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <svg width="10" height="6" viewBox="0 0 10 6" fill="none">
                 <path d="M1 1L5 5L9 1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
             </span>
           </nav>
-
-          <div className="flex items-center">
-            <a 
-              href="https://alfcolab.com/admin_login.php" 
-              className="px-5 py-2 rounded-lg border border-[#e05e26]/30 bg-[#f0e2d6]/50 text-ink font-medium text-[15px] hover:bg-[#e05e26]/10 transition-colors"
-            >
-              Log In
-            </a>
-          </div>
         </div>
       </header>
 
