@@ -12,11 +12,9 @@ import { StatusBadge } from './StatusBadge';
  */
 interface AppCardProps {
   app: AppEntry;
-  /** Compact mode for the orbit (smaller padding, fixed width). */
-  compact?: boolean;
 }
 
-export function AppCard({ app, compact = false }: AppCardProps) {
+export function AppCard({ app }: AppCardProps) {
   // Convert hex accent color to a very light transparent background for the icon box
   const iconBg = app.accentColor.startsWith('#') 
     ? `${app.accentColor}20` 
