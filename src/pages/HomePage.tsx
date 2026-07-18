@@ -294,12 +294,13 @@ export function HomePage() {
       </section>
 
       {/* Bottom Motto Banner */}
-      <section className="mx-auto max-w-4xl px-6 pb-6">
-        <div className="rounded-2xl bg-[#f5ece0] px-8 py-5 text-center">
-          <p className="font-sans text-[17px] font-bold text-[#5c4f48] tracking-tight">
-            Everyday tasks + Simple tools = Less stress.
-          </p>
-        </div>
+      <section className="mx-auto max-w-4xl px-6 pb-8">
+        <img
+          src="/motto-banner.jpg"
+          alt="Everyday tasks + Simple tools = Less stress."
+          className="w-full object-contain rounded-2xl"
+          style={{ mixBlendMode: 'multiply' }}
+        />
       </section>
     </>
   );
