@@ -5,8 +5,9 @@ import { Footer } from './Footer';
 /**
  * Layout — the neutral Alfcolab chrome shared by every page.
  *
- * Header: "Alf & Co Solutions" text logo + minimal nav. No Log In button
- * on the main site — login is only for verbio.alfcolab.com access.
+ * Header: "Alf & Co Solutions" text logo + minimal nav.
+ * No Log In on the main site — only for verbio.alfcolab.com.
+ * Nav: Dashboard, Projects only.
  */
 export function Layout() {
   return (
@@ -28,20 +29,8 @@ export function Layout() {
             >
               Dashboard
             </Link>
-            <Link
-              to="/apps"
-              className="hover:text-clay transition-colors"
-            >
-              Services
-            </Link>
             <span className="hover:text-clay transition-colors cursor-pointer">
               Projects
-            </span>
-            <span className="hover:text-clay transition-colors flex items-center gap-1 cursor-pointer">
-              Resources
-              <svg width="10" height="6" viewBox="0 0 10 6" fill="none">
-                <path d="M1 1L5 5L9 1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
             </span>
           </nav>
         </div>
