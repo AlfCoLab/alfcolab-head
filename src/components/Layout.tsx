@@ -14,18 +14,18 @@ export function Layout() {
     <div className="flex min-h-screen flex-col">
       <BrandThroughline />
 
-      <header className="sticky top-0 z-30 bg-canvas/80 backdrop-blur-sm">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
+      <header className="sticky top-0 z-30 pt-4 px-4 bg-canvas/40 backdrop-blur-sm">
+        <div className="mx-auto max-w-6xl bg-card border border-edge/40 rounded-2xl shadow-card px-8 py-4 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2 group text-clay hover:opacity-80 transition-opacity">
-            <span className="font-sans text-xl font-bold tracking-tight">
+            <span className="font-sans text-lg font-bold tracking-tight">
               Alf &amp; Co Solutions
             </span>
           </Link>
 
-          <nav aria-label="Primary" className="hidden md:flex items-center gap-8 text-[15px] font-medium text-ink">
+          <nav aria-label="Primary" className="hidden md:flex items-center gap-8 text-[14px] font-medium text-ink">
             <Link
               to="/"
-              className="text-clay border-b-2 border-clay pb-1"
+              className="text-clay border-b-2 border-clay pb-0.5"
             >
               Dashboard
             </Link>
