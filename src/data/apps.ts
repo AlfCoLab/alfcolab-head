@@ -12,7 +12,7 @@ export const apps: AppEntry[] = [
   {
     slug: 'verbio',
     name: 'Verbio',
-    status: 'testing',
+    status: 'development',
     category: 'language-learning',
     humanActivity: 'Language learning',
     shortDescription: 'Master all 148 English irregular verbs.',
@@ -21,12 +21,11 @@ export const apps: AppEntry[] = [
     tagline: 'Master English irregular verbs with simple daily practice.',
     accentColor: '#d97706', /* Orange */
     showInCatalog: true,
-    requiresAuth: false,
+    requiresAuth: true,
     webUrl: 'https://verbio.alfcolab.com',
     mobileStoreUrls: { ios: null, android: null },
     desktopDownloadUrl: null,
-    /* statusLabel: null → falls back to "beta version" via getStatusConfig('testing'). */
-    statusLabel: null,
+    statusLabel: 'private preview',
   },
   {
     slug: 'app-2',
