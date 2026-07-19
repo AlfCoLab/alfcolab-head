@@ -18,10 +18,10 @@ import { VerbioMark } from '../components/VerbioMark';
  * the first stop from a catalog card — the user lands here before going to
  * the app's subdomain.
  *
- * Status logic:
- *   - ready → public page, full content, platform links
- *   - testing / development → requiresAuth; restricted screen until a real
- *     Supabase session exists, then reveals the preview/beta link
+ * Status logic (per spec):
+ *   - ready    → public page, full content, platform links
+ *   - testing  → public page, beta badge, platform links (Open beta)
+ *   - development → restricted screen until a real Supabase session exists
  */
 export function AppPage() {
   const { slug = '' } = useParams<{ slug: string }>();
@@ -68,13 +68,12 @@ export function AppPage() {
   if (!app) return <NotFoundPage />;
 
   const isAuthenticated = Boolean(session);
-  const isAdmin = session?.user?.email === 'alfico2025@gmail.com';
-  const needsAuth = app.status !== 'ready';
-  
-  let showRestricted = needsAuth && !isAuthenticated;
-  if (app.slug === 'verbio') {
-    showRestricted = !isAdmin;
-  }
+  /*
+   * .md access rules: `ready` and `testing` are public; `development` is
+   * gated until a real session exists. No per-slug overrides — status is
+   * the single source of truth.
+   */
+  const showRestricted = app.status === 'development' && !isAuthenticated;
 
   return (
     <article>

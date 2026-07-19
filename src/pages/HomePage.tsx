@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { getCatalogApps } from '../lib/apps';
 import { useDocumentMeta } from '../hooks/useDocumentMeta';
 import type { AppEntry } from '../types';
@@ -58,21 +59,35 @@ function AppIconLarge({ slug }: { slug: string }) {
   }
 }
 
-/* Decorative Golden Star Sparkle */
-function GoldenStar({ className, style }: { className: string; style?: React.CSSProperties }) {
+/* Decorative Golden Star — twinkles (opacity pulse). */
+function GoldenStar({
+  className,
+  style,
+  size = 'w-3 h-3',
+}: {
+  className?: string;
+  style?: React.CSSProperties;
+  size?: string;
+}) {
   return (
-    <svg viewBox="0 0 24 24" className={`w-3 h-3 text-[#eab308] fill-current animate-float ${className}`} style={style}>
+    <svg
+      viewBox="0 0 24 24"
+      className={`${size} text-[#eab308] fill-current animate-twinkle ${className ?? ''}`}
+      style={style}
+      aria-hidden="true"
+    >
       <path d="M12 0L14.8 9.2L24 12L14.8 14.8L12 24L9.2 14.8L0 12L9.2 9.2L12 0Z" />
     </svg>
   );
 }
 
-/* Icon positions around the capybara (desktop) — matching mockup layout */
+/* Icon positions around the capybara (desktop) — matching mockup layout.
+   Each tile gets its own duration so they drift out of sync. */
 const iconPositions = [
-  { top: '12%',  left: '2%',   delay: '0s' },     // Top-left (Verbio/Resources)
-  { top: '4%',   left: '42%',  delay: '0.6s' },    // Top-center (Notes)
-  { bottom: '30%', right: '0%',  delay: '1.2s' },  // Right-middle (Analytics)
-  { bottom: '48%', left: '-4%',  delay: '1.8s' },  // Left-bottom (Community)
+  { top: '12%',  left: '2%',     delay: '0s',   duration: '3.2s' },  // Top-left (Verbio)
+  { top: '4%',   left: '42%',    delay: '0.6s', duration: '3.6s' },  // Top-center (Notes)
+  { bottom: '30%', right: '0%',  delay: '1.2s', duration: '3.0s' },  // Right-middle (Analytics)
+  { bottom: '48%', left: '-4%',  delay: '1.8s', duration: '3.8s' },  // Left-bottom (Community)
 ];
 
 /* Human-readable labels for the app icons */
@@ -130,15 +145,18 @@ function AppDetailPanel({ app, onClose }: { app: AppEntry; onClose: () => void }
         </div>
 
         <div className="flex flex-wrap items-center gap-3 pt-1">
-          {isVerbio && app.webUrl ? (
-            <a
-              href={app.webUrl}
-              target="_blank"
-              rel="noopener noreferrer"
+          {/*
+            Per .md: never route the homepage straight to a subdomain.
+            The CTA opens the app's page at /app/:slug, which then carries
+            the platform links (web / mobile / desktop).
+          */}
+          {isVerbio ? (
+            <Link
+              to={`/app/${app.slug}`}
               className="flex items-center justify-center rounded-xl bg-[#16a34a] px-7 py-3.5 text-[15px] font-bold text-white hover:bg-[#148f40] transition-colors shadow-sm"
             >
-              Open Web App
-            </a>
+              Open page →
+            </Link>
           ) : (
             <span className="flex items-center justify-center rounded-xl bg-edge/30 px-6 py-3.5 text-[15px] font-semibold text-ink-soft/50 cursor-default">
               Web App — Coming Soon
@@ -184,15 +202,16 @@ export function HomePage() {
           {/* Left side: Capybara with floating app icon tiles */}
           <div className="relative w-full lg:w-[55%] flex justify-center" style={{ minHeight: '380px' }}>
 
-            {/* Decorative sparkles */}
-            <div className="absolute w-full h-full pointer-events-none" aria-hidden="true">
-              <GoldenStar className="absolute top-[10%] left-[28%]" style={{ animationDelay: '0.2s', animationDuration: '4.5s' }} />
-              <GoldenStar className="absolute top-[22%] right-[30%]" style={{ animationDelay: '0.8s', animationDuration: '5s' }} />
-              <GoldenStar className="absolute bottom-[32%] left-[18%]" style={{ animationDelay: '1.4s', animationDuration: '4.2s' }} />
-              <GoldenStar className="absolute bottom-[20%] right-[22%]" style={{ animationDelay: '2.0s', animationDuration: '3.8s' }} />
+            {/* Decorative twinkling stars — 4 around the capybara (per mockup). */}
+            <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
+              <GoldenStar size="w-3 h-3"     className="absolute top-[8%]  left-[30%]" style={{ animationDelay: '0s',   animationDuration: '2.4s' }} />
+              <GoldenStar size="w-2.5 h-2.5" className="absolute top-[4%]  left-[52%]" style={{ animationDelay: '0.7s', animationDuration: '2.8s' }} />
+              <GoldenStar size="w-3.5 h-3.5" className="absolute top-[18%] left-[20%]" style={{ animationDelay: '1.3s', animationDuration: '3.2s' }} />
+              <GoldenStar size="w-2.5 h-2.5" className="absolute top-[22%] left-[64%]" style={{ animationDelay: '0.4s', animationDuration: '2.1s' }} />
             </div>
 
-            {/* Desktop: Large floating app-icon tiles around capybara */}
+            {/* Desktop: Large floating app-icon tiles around capybara.
+                Each drifts on its own rhythm; hovering/selecting freezes it. */}
             <div className="hidden lg:block">
               {catalog.map((app, i) => {
                 const pos = iconPositions[i];
@@ -203,15 +222,21 @@ export function HomePage() {
                 return (
                   <div
                     key={app.slug}
-                    className="absolute z-10 flex flex-col items-center gap-1.5 animate-icon-float"
+                    className="absolute z-10 flex flex-col items-center gap-1.5 animate-icon-float hover:[animation-play-state:paused]"
                     style={{
-                      ...pos,
+                      top: pos.top,
+                      left: pos.left,
+                      right: pos.right,
+                      bottom: pos.bottom,
                       animationDelay: pos.delay,
+                      animationDuration: pos.duration,
+                      /* Freeze the float when this tile is the active one. */
+                      animationPlayState: isSelected ? 'paused' : undefined,
                     }}
                   >
                     <button
                       onClick={() => handleIconClick(app)}
-                      className="flex items-center justify-center cursor-pointer transition-all duration-300 ease-out"
+                      className="flex items-center justify-center cursor-pointer transition-[transform,box-shadow,border-color] duration-300 ease-out"
                       style={{
                         width: '80px',
                         height: '80px',
@@ -247,12 +272,12 @@ export function HomePage() {
               })}
             </div>
 
-            {/* Capybara image — 2D cartoon style, mix-blend-mode: multiply */}
+            {/* Capybara image — 2D cartoon style, static (per request). */}
             <img
               src="/capybara-main.jpg"
               alt="Capybara mascot peacefully working at a desk with a two-handled cup"
-              className="w-full max-w-[320px] lg:max-w-[360px] object-contain animate-float relative z-0"
-              style={{ animationDuration: '6s', mixBlendMode: 'multiply' }}
+              className="w-full max-w-[320px] lg:max-w-[360px] object-contain relative z-0"
+              style={{ mixBlendMode: 'multiply' }}
             />
           </div>
 
