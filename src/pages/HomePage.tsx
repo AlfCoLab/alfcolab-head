@@ -1,405 +1,170 @@
-import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { getCatalogApps } from '../lib/apps';
 import { useDocumentMeta } from '../hooks/useDocumentMeta';
 import { useLanguage } from '../context/LanguageContext';
-import type { AppEntry } from '../types';
 
-/* ─── Large filled app-icon SVGs ─── */
-function AppIconLarge({ slug }: { slug: string }) {
-  const size = 36;
-  const common = { width: size, height: size, viewBox: '0 0 24 24', fill: 'none', strokeLinecap: 'round' as const, strokeLinejoin: 'round' as const };
-
-  switch (slug) {
-    case 'verbio':
-      return (
-        <svg {...common}>
-          <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" stroke="#15803d" strokeWidth="2" />
-          <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" fill="#15803d" fillOpacity="0.15" stroke="#15803d" strokeWidth="2" />
-          <path d="M8 7h8M8 11h6" stroke="#15803d" strokeWidth="2" />
-        </svg>
-      );
-    case 'app-2':
-      return (
-        <svg {...common}>
-          <rect x="4" y="2" width="16" height="20" rx="2" fill="#ea580c" fillOpacity="0.15" stroke="#ea580c" strokeWidth="2" />
-          <path d="M8 6h8M8 10h8M8 14h5" stroke="#ea580c" strokeWidth="2" />
-        </svg>
-      );
-    case 'app-3':
-      return (
-        <svg {...common}>
-          <rect x="2" y="2" width="20" height="20" rx="3" fill="#16a34a" fillOpacity="0.12" stroke="none" />
-          <rect x="5" y="13" width="3.5" height="7" rx="1" fill="#16a34a" />
-          <rect x="10.25" y="8" width="3.5" height="12" rx="1" fill="#16a34a" />
-          <rect x="15.5" y="4" width="3.5" height="16" rx="1" fill="#16a34a" />
-          <path d="M6 10L11 6L16 8L19 3" stroke="#16a34a" strokeWidth="1.8" fill="none" />
-          <circle cx="19" cy="3" r="1.2" fill="#16a34a" />
-        </svg>
-      );
-    case 'app-4':
-      return (
-        <svg {...common}>
-          <circle cx="9" cy="7" r="3.5" fill="#2563eb" fillOpacity="0.2" stroke="#2563eb" strokeWidth="1.5" />
-          <path d="M2 20c0-3.3 2.7-6 6-6h2c3.3 0 6 2.7 6 6" fill="#2563eb" fillOpacity="0.15" stroke="#2563eb" strokeWidth="1.5" />
-          <circle cx="17" cy="8" r="2.5" fill="#2563eb" fillOpacity="0.25" stroke="#2563eb" strokeWidth="1.5" />
-          <path d="M18 14c2.2 0.5 4 2.5 4 5" stroke="#2563eb" strokeWidth="1.5" />
-        </svg>
-      );
-    default:
-      return (
-        <svg {...common}>
-          <rect x="3" y="3" width="18" height="18" rx="3" fill="#6b7280" fillOpacity="0.15" stroke="#6b7280" strokeWidth="2" />
-          <path d="M9 12l2 2 4-4" stroke="#6b7280" strokeWidth="2" />
-        </svg>
-      );
-  }
-}
-
-/* Decorative Golden Star */
-function GoldenStar({
-  className,
-  style,
-  size = 'w-3 h-3',
-}: {
-  className?: string;
-  style?: React.CSSProperties;
-  size?: string;
-}) {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      className={`${size} text-[#eab308] fill-current animate-twinkle ${className ?? ''}`}
-      style={style}
-      aria-hidden="true"
-    >
-      <path d="M12 0L14.8 9.2L24 12L14.8 14.8L12 24L9.2 14.8L0 12L9.2 9.2L12 0Z" />
-    </svg>
-  );
-}
-
-const iconPositions = [
-  { top: '4%',  left: '0%',   right: undefined, bottom: undefined, delay: '0s',   duration: '3.2s' },  // Verbio (Top-Left)
-  { top: '4%',  left: undefined, right: '0%',   bottom: undefined, delay: '0.6s', duration: '3.6s' },  // Notes (Top-Right)
-  { top: undefined, left: undefined, right: '0%', bottom: '8%',    delay: '1.2s', duration: '3.0s' },  // Habits (Bottom-Right)
-  { top: undefined, left: '0%',   right: undefined, bottom: '8%',    delay: '1.8s', duration: '3.8s' },  // Tracker (Bottom-Left)
-];
-
-const appLabels: Record<string, string> = {
-  'verbio': 'Verbio',
-  'app-2': 'Notes',
-  'app-3': 'Habits',
-  'app-4': 'Tracker',
-};
-
-const iconBgColors: Record<string, string> = {
-  'verbio': '#dbeafe',
-  'app-2': '#fff1e0',
-  'app-3': '#dcfce7',
-  'app-4': '#f3e8ff',
-};
-
-const iconBorderSelected: Record<string, string> = {
-  'verbio': '#0284c7',
-  'app-2': '#d97706',
-  'app-3': '#16a34a',
-  'app-4': '#9333ea',
-};
-
-/* ─── Detail panel ─── */
-function AppDetailPanel({ app, onClose }: { app: AppEntry; onClose: () => void }) {
-  const { t } = useLanguage();
-  const isVerbio = app.slug === 'verbio';
-  return (
-    <div
-      className="animate-panel-expand mt-6 mx-auto max-w-5xl rounded-2xl bg-card border-2 p-6 sm:p-8"
-      style={{
-        animationDuration: '0.3s',
-        borderColor: '#d97706',
-        boxShadow: '4px 4px 0 #d97706',
-      }}
-    >
-      <div className="flex flex-col md:flex-row md:items-start justify-between gap-6">
-        <div className="flex-1 min-w-0">
-          <h3 className="font-sans text-2xl font-extrabold text-ink tracking-tight">
-            {appLabels[app.slug] || app.name}
-          </h3>
-          <p className="mt-2 text-[15px] text-ink-soft leading-relaxed max-w-xl">
-            {isVerbio ? t('verbio.detail') : app.description}
-          </p>
-          <p className="mt-4 text-xs text-ink-soft/70">
-            Request access:{' '}
-            <a href="mailto:mail@alfcolab.com" className="text-clay hover:underline font-semibold">
-              mail@alfcolab.com
-            </a>
-          </p>
-        </div>
-
-        <div className="flex flex-wrap items-center gap-3 pt-1">
-          {isVerbio ? (
-            <Link
-              to={`/app/${app.slug}`}
-              className="flex items-center justify-center rounded-xl bg-[#16a34a] px-6 py-3 text-sm font-bold text-white hover:bg-[#148f40] transition-colors shadow-sm"
-            >
-              {t('btn.openPage')} →
-            </Link>
-          ) : (
-            <span className="flex items-center justify-center rounded-xl bg-edge/30 px-5 py-3 text-sm font-semibold text-ink-soft/50 cursor-default">
-              Web App — {t('badge.soon')}
-            </span>
-          )}
-        </div>
-      </div>
-      <div className="mt-4 flex justify-end">
-        <button onClick={onClose} className="text-xs font-bold text-ink-soft/60 hover:text-clay transition-colors cursor-pointer">
-          Close panel
-        </button>
-      </div>
-    </div>
-  );
-}
-
-/* ─── HomePage ─── */
 export function HomePage() {
   const { t } = useLanguage();
   useDocumentMeta(
-    'Alf & Co Solutions — Dashboard',
-    'Everyday tasks, Simple tools = Less stress. Streamline your daily operations with calm digital tools.',
+    'Alf&Co LAB — Soft Laboratory',
+    'Small products for everyday life. Simple tools for everyday tasks.',
   );
 
-  const catalog = getCatalogApps().filter(app => app.slug !== 'head').slice(0, 4);
-  const [selectedApp, setSelectedApp] = useState<AppEntry | null>(null);
-
-  const handleIconClick = (app: AppEntry) => {
-    setSelectedApp(prev => prev?.slug === app.slug ? null : app);
-  };
-
   return (
-    <>
-      {/* Hero section */}
-      <section className="mx-auto max-w-6xl px-6 pt-6 sm:pt-8 lg:pt-10">
-        <div className="flex flex-col lg:flex-row items-center justify-between gap-6 lg:gap-8">
+    <div className="w-full max-w-6xl mx-auto p-4 sm:p-6 flex flex-col items-center justify-center">
+      {/* Main Container Card */}
+      <div className="relative w-full rounded-[2rem] shadow-xl border border-stone-200/50 overflow-hidden flex flex-col p-6 md:p-10 my-2">
+        {/* Background Image & Gradient */}
+        <div
+          className="absolute inset-0 z-0 bg-cover"
+          style={{
+            backgroundImage: "url('/hero-bg.png')",
+            backgroundPosition: '100% 50%',
+          }}
+        />
+        <div
+          className="absolute inset-0 z-0"
+          style={{
+            background: 'linear-gradient(105deg, #FBF6EE 30%, rgba(251, 246, 238, 0.85) 55%, transparent 90%)',
+          }}
+        />
 
-          {/* Left side: Capybara with floating app icon tiles */}
-          <div className="relative w-full lg:w-[52%] flex justify-center" style={{ minHeight: '360px' }}>
-            <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
-              <GoldenStar size="w-3 h-3"     className="absolute top-[8%]  left-[30%]" style={{ animationDelay: '0s',   animationDuration: '2.4s' }} />
-              <GoldenStar size="w-2.5 h-2.5" className="absolute top-[4%]  left-[52%]" style={{ animationDelay: '0.7s', animationDuration: '2.8s' }} />
-              <GoldenStar size="w-3.5 h-3.5" className="absolute top-[18%] left-[20%]" style={{ animationDelay: '1.3s', animationDuration: '3.2s' }} />
-              <GoldenStar size="w-2.5 h-2.5" className="absolute top-[22%] left-[64%]" style={{ animationDelay: '0.4s', animationDuration: '2.1s' }} />
-            </div>
-
-            {/* Desktop: Floating app-icon tiles */}
-            <div className="hidden lg:block">
-              {catalog.map((app, i) => {
-                const pos = iconPositions[i];
-                const isSelected = selectedApp?.slug === app.slug;
-                const bg = iconBgColors[app.slug] || '#f3f4f6';
-                const borderColor = isSelected ? (iconBorderSelected[app.slug] || '#d97706') : 'transparent';
-
-                return (
-                  <div
-                    key={app.slug}
-                    className="absolute z-10 flex flex-col items-center gap-1.5 animate-icon-float hover:[animation-play-state:paused]"
-                    style={{
-                      top: pos.top,
-                      left: pos.left,
-                      right: pos.right,
-                      bottom: pos.bottom,
-                      animationDelay: pos.delay,
-                      animationDuration: pos.duration,
-                      animationPlayState: isSelected ? 'paused' : undefined,
-                    }}
-                  >
-                    <button
-                      onClick={() => handleIconClick(app)}
-                      className="flex items-center justify-center cursor-pointer transition-[transform,box-shadow,border-color] duration-300 ease-out"
-                      style={{
-                        width: '76px',
-                        height: '76px',
-                        borderRadius: '20px',
-                        backgroundColor: bg,
-                        border: `3px solid ${borderColor}`,
-                        boxShadow: isSelected
-                          ? '4px 4px 0 #d97706'
-                          : '0 2px 8px rgba(0,0,0,0.06)',
-                        transform: isSelected ? 'scale(1.1)' : 'scale(1)',
-                      }}
-                      aria-label={`Open ${appLabels[app.slug]} details`}
-                    >
-                      <AppIconLarge slug={app.slug} />
-                    </button>
-                    <span className="text-xs font-semibold text-ink-soft select-none whitespace-nowrap mt-1">
-                      {appLabels[app.slug]}
-                    </span>
-                  </div>
-                );
-              })}
-            </div>
-
-            {/* Capybara mascot image */}
+        {/* 1. Hero Content */}
+        <div className="relative z-10 flex-1 flex flex-col md:flex-row items-center justify-center gap-8 w-full py-4 min-h-[320px]">
+          {/* Mascot Image */}
+          <div className="w-full md:w-2/5 flex items-center justify-center p-2 max-h-[380px]">
             <img
-              src="/capybara-main.jpg"
-              alt="Capybara mascot peacefully working at a desk with a two-handled cup"
-              className="w-full max-w-[300px] lg:max-w-[340px] object-contain relative z-0"
-              style={{ mixBlendMode: 'multiply' }}
+              src="/mascot-hero.png"
+              alt="Alf&Co LAB Mascot"
+              className="masked-img block max-h-full max-w-full w-auto object-contain drop-shadow-md"
             />
           </div>
 
-          {/* Right side: Headline text */}
-          <div className="w-full lg:w-[46%] text-center lg:text-left">
-            <div className="inline-block px-3 py-1 bg-amber-100/80 text-amber-800 rounded-full text-xs font-semibold mb-4 border border-amber-200 shadow-xs">
+          {/* Headline Text */}
+          <div className="w-full md:w-3/5 max-w-xl text-center md:text-left flex flex-col justify-center">
+            <div className="inline-block self-center md:self-start px-3 py-1 bg-amber-100/90 text-amber-900 rounded-full text-xs font-bold mb-3 border border-amber-200/80 shadow-xs">
               <span>{t('hero.badge')}</span>
             </div>
-            <h1 className="font-sans text-[36px] leading-[1.1] font-black tracking-tight text-[#0f212e] sm:text-[46px] lg:text-[52px]">
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-stone-900 mb-3 leading-tight">
               {t('hero.title')}
             </h1>
-            <p className="mt-4 text-[15px] leading-relaxed text-ink-soft max-w-[460px] mx-auto lg:mx-0">
+            <p className="text-sm md:text-base text-stone-600 max-w-lg mx-auto md:mx-0 leading-relaxed">
               {t('hero.desc')}
             </p>
-            <p className="mt-3 text-[13px] italic font-medium text-clay">
+            <p className="text-xs italic text-amber-800/80 font-medium mt-3">
               {t('hero.motto')}
             </p>
           </div>
         </div>
 
-        {/* Selected App Detail Panel */}
-        {selectedApp && (
-          <AppDetailPanel app={selectedApp} onClose={() => setSelectedApp(null)} />
-        )}
-
-        {/* Bottom 4 Compact App Cards Grid (Matching mockup cards) */}
-        <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {/* Card 1: Verbio */}
+        {/* 2. Compact App Cards Grid */}
+        <div className="relative z-10 w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-6">
+          {/* App 1: Verbio */}
           <Link
             to="/app/verbio"
-            className="rounded-2xl bg-card border-2 border-edge p-4 hover:border-blue-400 transition-all group flex flex-col justify-between"
-            style={{ boxShadow: '4px 4px 0 #d97706' }}
+            className="vibrant-card p-4 text-left cursor-pointer flex flex-col justify-between hover:border-blue-300 group"
           >
             <div>
-              <div className="flex justify-between items-center mb-3">
-                <div className="w-10 h-10 rounded-xl bg-blue-500 text-white font-extrabold flex items-center justify-center text-lg shadow-sm">
+              <div className="flex justify-between items-center mb-2.5">
+                <div className="w-9 h-9 rounded-lg flex items-center justify-center font-bold text-sm bg-blue-500 text-white flex-shrink-0 shadow-sm">
                   V
                 </div>
-                <span className="inline-flex items-center gap-1.5 text-xs font-bold text-blue-700 bg-blue-50 px-2.5 py-0.5 rounded-full border border-blue-200">
-                  <span className="w-1.5 h-1.5 bg-blue-500 rounded-full animate-pulse"></span>
+                <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-blue-700 bg-blue-50 px-2.5 py-0.5 rounded-full border border-blue-100">
+                  <span className="w-1.5 h-1.5 bg-blue-500 rounded-full animate-pulse" />
                   {t('badge.beta')}
                 </span>
               </div>
-              <h3 className="font-sans text-lg font-bold text-ink">Verbio</h3>
-              <p className="text-xs text-ink-soft mt-1 leading-relaxed">
+              <h3 className="text-base font-bold text-stone-900 leading-tight">Verbio</h3>
+              <p className="text-xs text-stone-500 mt-1 mb-2">
                 {t('app.verbio.desc')}
               </p>
             </div>
-            <div className="mt-4 flex items-center text-xs font-bold text-blue-600 group-hover:translate-x-1 transition-transform">
+            <div className="flex items-center text-xs font-bold text-blue-600 group-hover:translate-x-1 transition-transform">
               <span>{t('btn.openPage')}</span>
-              <span className="ml-1">→</span>
+              <svg className="w-3.5 h-3.5 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
+              </svg>
             </div>
           </Link>
 
-          {/* Card 2: Notes */}
-          <div
-            className="rounded-2xl bg-card border-2 border-edge/60 p-4 opacity-80 flex flex-col justify-between"
-            style={{ boxShadow: '4px 4px 0 #d97706' }}
-          >
+          {/* App 2: Notes */}
+          <div className="vibrant-card p-4 opacity-75 flex flex-col justify-between cursor-not-allowed">
             <div>
-              <div className="flex justify-between items-center mb-3">
-                <div className="w-10 h-10 rounded-xl bg-purple-500 text-white font-extrabold flex items-center justify-center text-lg shadow-sm">
+              <div className="flex justify-between items-center mb-2.5">
+                <div className="w-9 h-9 rounded-lg flex items-center justify-center font-bold text-sm bg-purple-500 text-white flex-shrink-0 shadow-sm">
                   N
                 </div>
-                <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-stone-600 bg-stone-100 px-2.5 py-0.5 rounded-full border border-stone-200">
-                  <span className="w-1.5 h-1.5 bg-stone-400 rounded-full"></span>
+                <span className="inline-flex items-center gap-1.5 text-xs font-medium text-stone-600 bg-stone-100 px-2.5 py-0.5 rounded-full border border-stone-200">
+                  <span className="w-1.5 h-1.5 bg-stone-400 rounded-full" />
                   {t('badge.soon')}
                 </span>
               </div>
-              <h3 className="font-sans text-lg font-bold text-ink">{t('app.notes.name')}</h3>
-              <p className="text-xs text-ink-soft mt-1 leading-relaxed">
+              <h3 className="text-base font-bold text-stone-900 leading-tight">{t('app.notes.name')}</h3>
+              <p className="text-xs text-stone-500 mt-1 mb-2">
                 {t('app.notes.desc')}
               </p>
             </div>
-            <div className="mt-4 text-xs font-semibold text-ink-soft/60">
+            <div className="text-xs font-medium text-stone-400">
               {t('badge.inDev')}
             </div>
           </div>
 
-          {/* Card 3: Habits */}
-          <div
-            className="rounded-2xl bg-card border-2 border-edge/60 p-4 opacity-80 flex flex-col justify-between"
-            style={{ boxShadow: '4px 4px 0 #d97706' }}
-          >
+          {/* App 3: Habits */}
+          <div className="vibrant-card p-4 opacity-75 flex flex-col justify-between cursor-not-allowed">
             <div>
-              <div className="flex justify-between items-center mb-3">
-                <div className="w-10 h-10 rounded-xl bg-green-500 text-white font-extrabold flex items-center justify-center text-lg shadow-sm">
+              <div className="flex justify-between items-center mb-2.5">
+                <div className="w-9 h-9 rounded-lg flex items-center justify-center font-bold text-sm bg-green-500 text-white flex-shrink-0 shadow-sm">
                   H
                 </div>
-                <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-stone-600 bg-stone-100 px-2.5 py-0.5 rounded-full border border-stone-200">
-                  <span className="w-1.5 h-1.5 bg-stone-400 rounded-full"></span>
+                <span className="inline-flex items-center gap-1.5 text-xs font-medium text-stone-600 bg-stone-100 px-2.5 py-0.5 rounded-full border border-stone-200">
+                  <span className="w-1.5 h-1.5 bg-stone-400 rounded-full" />
                   {t('badge.soon')}
                 </span>
               </div>
-              <h3 className="font-sans text-lg font-bold text-ink">{t('app.habits.name')}</h3>
-              <p className="text-xs text-ink-soft mt-1 leading-relaxed">
+              <h3 className="text-base font-bold text-stone-900 leading-tight">{t('app.habits.name')}</h3>
+              <p className="text-xs text-stone-500 mt-1 mb-2">
                 {t('app.habits.desc')}
               </p>
             </div>
-            <div className="mt-4 text-xs font-semibold text-ink-soft/60">
+            <div className="text-xs font-medium text-stone-400">
               {t('badge.inDev')}
             </div>
           </div>
 
-          {/* Card 4: Tracker */}
-          <div
-            className="rounded-2xl bg-card border-2 border-edge/60 p-4 opacity-80 flex flex-col justify-between"
-            style={{ boxShadow: '4px 4px 0 #d97706' }}
-          >
+          {/* App 4: Tracker */}
+          <div className="vibrant-card p-4 opacity-75 flex flex-col justify-between cursor-not-allowed">
             <div>
-              <div className="flex justify-between items-center mb-3">
-                <div className="w-10 h-10 rounded-xl bg-amber-500 text-white font-extrabold flex items-center justify-center text-lg shadow-sm">
+              <div className="flex justify-between items-center mb-2.5">
+                <div className="w-9 h-9 rounded-lg flex items-center justify-center font-bold text-sm bg-amber-500 text-white flex-shrink-0 shadow-sm">
                   T
                 </div>
-                <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-stone-600 bg-stone-100 px-2.5 py-0.5 rounded-full border border-stone-200">
-                  <span className="w-1.5 h-1.5 bg-stone-400 rounded-full"></span>
+                <span className="inline-flex items-center gap-1.5 text-xs font-medium text-stone-600 bg-stone-100 px-2.5 py-0.5 rounded-full border border-stone-200">
+                  <span className="w-1.5 h-1.5 bg-stone-400 rounded-full" />
                   {t('badge.soon')}
                 </span>
               </div>
-              <h3 className="font-sans text-lg font-bold text-ink">{t('app.tracker.name')}</h3>
-              <p className="text-xs text-ink-soft mt-1 leading-relaxed">
+              <h3 className="text-base font-bold text-stone-900 leading-tight">{t('app.tracker.name')}</h3>
+              <p className="text-xs text-stone-500 mt-1 mb-2">
                 {t('app.tracker.desc')}
               </p>
             </div>
-            <div className="mt-4 text-xs font-semibold text-ink-soft/60">
+            <div className="text-xs font-medium text-stone-400">
               {t('badge.inDev')}
             </div>
           </div>
         </div>
-      </section>
+      </div>
 
-      {/* Ko-fi link */}
-      <section className="mx-auto max-w-6xl px-6 py-6 text-center">
+      {/* Ko-fi Support Link */}
+      <div className="py-4 text-center">
         <a
           href="https://ko-fi.com/alfcosolutions"
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 text-[14px] font-bold text-ink-soft hover:text-clay transition-colors group"
+          className="text-xs font-bold text-stone-500 hover:text-amber-800 transition-colors"
         >
-          <span>{t('footer.kofi')}</span>
+          {t('footer.kofi')}
         </a>
-      </section>
-
-      {/* Bottom CTA bubble */}
-      <section className="mx-auto max-w-3xl px-6 pb-8">
-        <div
-          className="rounded-2xl px-8 py-5 text-center shadow-card border border-blue-200/50"
-          style={{
-            backgroundColor: '#dbeafe',
-            color: '#1e3a5f',
-          }}
-        >
-          <p className="text-[15px] font-semibold">
-            {t('cta.join')}
-          </p>
-        </div>
-      </section>
-    </>
+      </div>
+    </div>
   );
 }
