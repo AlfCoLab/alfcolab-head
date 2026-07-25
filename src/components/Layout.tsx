@@ -28,9 +28,9 @@ export function Layout() {
               <Link to="/" className="hover:text-amber-800 transition-colors">
                 {t('nav.dashboard')}
               </Link>
-              <span className="hover:text-amber-800 transition-colors cursor-pointer">
+              <Link to="/apps" className="hover:text-amber-800 transition-colors">
                 {t('nav.projects')}
-              </span>
+              </Link>
             </nav>
 
             <div className="flex items-center bg-white/80 border border-stone-200 rounded-full p-1 text-xs font-semibold shadow-sm">
