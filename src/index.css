@@ -3,90 +3,61 @@
 
 /*
  * Alfcolab — Dolce Vita (Tuscany) palette.
- * Authoritative source: delivered brand vectors (google_v3) and
- * preview_alf_elements.html. Warm, creamy, calm — "Calm Productivity".
+ * Warm, creamy, calm — "Calm Productivity".
+ * Playful/Friendly style inspired by Notion/Figma.
  */
 @theme {
   /* Surfaces & text */
-  --color-canvas: #faf5ec; /* page background — warm cream */
-  --color-card: #fffdf9; /* card surface — off-white */
-  --color-line: #e8e6e1; /* subtle UI fills */
-  --color-edge: #d3cfc5; /* visible borders */
-  --color-ink: #0f212e; /* primary text — deep slate */
-  --color-ink-soft: #41525f; /* secondary text */
+  --color-canvas: #faf5ec;
+  --color-card: #fffdf9;
+  --color-line: #e8e6e1;
+  --color-edge: #d3cfc5;
+  --color-ink: #0f212e;
+  --color-ink-soft: #41525f;
 
   /* Brand accents */
-  --color-clay: #e05e26; /* terracotta — the focus accent */
-  --color-clay-soft: #f0e2d6; /* terracotta tint surface */
-  --color-moss: #596a4c; /* muted olive green */
+  --color-clay: #e05e26;
+  --color-clay-soft: #f0e2d6;
+  --color-moss: #596a4c;
 
   /* Status accents (used by StatusBadge) */
-  --color-ready: #596a4c; /* calm green */
-  --color-beta: #c9912f; /* warm amber */
-  --color-dev: #8a857a; /* muted grey */
+  --color-ready: #596a4c;
+  --color-beta: #c9912f;
+  --color-dev: #8a857a;
 
-  /* Typography roles */
+  /* Typography */
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
   --font-body: 'Source Sans 3', 'Source Sans Pro', system-ui, sans-serif;
 
-  /* Radii — Soft UI, rounded but not pillowy */
+  /* Radii */
   --radius-card: 14px;
   --radius-soft: 10px;
   --radius-line: 3px;
 
-  /* Shadows — extremely subtle, tinted with ink */
-  --shadow-card: 0 1px 0 rgba(15, 33, 46, 0.04);
-  --shadow-lift: 0 6px 24px rgba(15, 33, 46, 0.08);
-  --shadow-retro: 4px 4px 0 var(--color-clay);
-
-  /* Orbit animation */
-  --animate-spin-slow: orbit-spin 60s linear infinite;
+  /* Shadows — soft, Notion-style */
+  --shadow-card: 0 1px 2px rgba(15, 33, 46, 0.04);
+  --shadow-lift: 0 8px 24px rgba(15, 33, 46, 0.10);
+  --shadow-hero: 0 4px 40px rgba(15, 33, 46, 0.06);
 }
 
-@keyframes orbit-spin {
-  from {
-    transform: rotateY(0deg);
-  }
-  to {
-    transform: rotateY(360deg);
-  }
-}
+/* ─── Animations ─── */
 
-/* Gentle floating animation for the capybara hero */
-@keyframes float {
-  0%, 100% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-12px);
-  }
-}
-
-/* App-icon float: pure vertical bob. Tiles stay upright (per mockup). */
 @keyframes icon-float {
-  0%, 100% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-8px);
-  }
+  0%, 100% { transform: translateY(0px); }
+  50%      { transform: translateY(-8px); }
 }
 
-/* Sparkle twinkle: opacity-only pulse so the stars stay as quiet
-   background accents next to the app-icon tiles (no scale popping). */
 @keyframes twinkle {
-  0%, 100% {
-    opacity: 0.35;
-  }
-  50% {
-    opacity: 0.95;
-  }
+  0%, 100% { opacity: 0.3; }
+  50%      { opacity: 1; }
+}
+
+@keyframes panel-expand {
+  from { opacity: 0; transform: translateY(-12px) scaleY(0.95); }
+  to   { opacity: 1; transform: translateY(0) scaleY(1); }
 }
 
 @layer utilities {
-  .animate-float {
-    animation: float 4s ease-in-out infinite;
-  }
   .animate-icon-float {
     animation: icon-float 3s ease-in-out infinite;
   }
@@ -96,19 +67,17 @@
   .animate-panel-expand {
     animation: panel-expand 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
   }
+  /* Notion-style card hover: gentle lift + soft shadow */
+  .card-hover {
+    transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+  }
+  .card-hover:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lift);
+  }
 }
 
-/* Spring-like expand for the detail panel */
-@keyframes panel-expand {
-  from {
-    opacity: 0;
-    transform: translateY(-12px) scaleY(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scaleY(1);
-  }
-}
+/* ─── Base ─── */
 
 @layer base {
   html {
@@ -121,10 +90,7 @@
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
   }
-  h1,
-  h2,
-  h3,
-  h4 {
+  h1, h2, h3, h4 {
     font-family: var(--font-sans);
     font-weight: 600;
     letter-spacing: -0.01em;
@@ -136,14 +102,11 @@
   }
 }
 
-/* Honor users who prefer no motion: freeze the orbit, no smooth scroll. */
+/* ─── Reduced motion ─── */
+
 @media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
-  *,
-  *::before,
-  *::after {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
     animation-duration: 0.001ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;

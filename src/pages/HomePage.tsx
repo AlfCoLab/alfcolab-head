@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { getCatalogApps } from '../lib/apps';
 import { useDocumentMeta } from '../hooks/useDocumentMeta';
+import { useLanguage } from '../context/LanguageContext';
 import type { AppEntry } from '../types';
 
 /* ─── Large filled app-icon SVGs (iOS-style, matching mockup) ─── */
@@ -81,41 +82,41 @@ function GoldenStar({
   );
 }
 
-/* Icon positions around the capybara (desktop) — matching mockup layout.
-   Each tile gets its own duration so they drift out of sync. */
+/* Icon positions around the capybara (desktop) — matching mockup layout. */
 const iconPositions = [
   { top: '12%',  left: '2%',     delay: '0s',   duration: '3.2s' },  // Top-left (Verbio)
   { top: '4%',   left: '42%',    delay: '0.6s', duration: '3.6s' },  // Top-center (Notes)
-  { bottom: '30%', right: '0%',  delay: '1.2s', duration: '3.0s' },  // Right-middle (Analytics)
-  { bottom: '48%', left: '-4%',  delay: '1.8s', duration: '3.8s' },  // Left-bottom (Community)
+  { bottom: '30%', right: '0%',  delay: '1.2s', duration: '3.0s' },  // Right-middle (Analytics/Habits)
+  { bottom: '48%', left: '-4%',  delay: '1.8s', duration: '3.8s' },  // Left-bottom (Tracker)
 ];
 
 /* Human-readable labels for the app icons */
 const appLabels: Record<string, string> = {
   'verbio': 'Verbio',
   'app-2': 'Notes',
-  'app-3': 'Analytics',
-  'app-4': 'Community',
+  'app-3': 'Habits',
+  'app-4': 'Tracker',
 };
 
-/* Pastel background colors for each icon tile (matching mockup) */
+/* Pastel background colors for each icon tile */
 const iconBgColors: Record<string, string> = {
-  'verbio': '#dcfce7',   // Soft green
+  'verbio': '#dbeafe',   // Soft blue
   'app-2': '#fff1e0',    // Soft peach/orange
   'app-3': '#dcfce7',    // Soft green
-  'app-4': '#dbeafe',    // Soft blue
+  'app-4': '#f3e8ff',    // Soft purple
 };
 
 /* Border colors for selected state */
 const iconBorderSelected: Record<string, string> = {
-  'verbio': '#22c55e',
-  'app-2': '#f59e0b',
-  'app-3': '#22c55e',
-  'app-4': '#3b82f6',
+  'verbio': '#0284c7',
+  'app-2': '#d97706',
+  'app-3': '#16a34a',
+  'app-4': '#9333ea',
 };
 
 /* ─── Detail panel (matching expanded mockup) ─── */
 function AppDetailPanel({ app, onClose }: { app: AppEntry; onClose: () => void }) {
+  const { t } = useLanguage();
   const isVerbio = app.slug === 'verbio';
   return (
     <div
@@ -133,7 +134,7 @@ function AppDetailPanel({ app, onClose }: { app: AppEntry; onClose: () => void }
           </h3>
           <p className="mt-3 text-[16px] text-ink-soft leading-relaxed max-w-xl">
             {isVerbio
-              ? 'Master all 148 English irregular verbs with calm, browser-based training. Adaptive spaced repetition, rhyme-based recall, and timed sprints.'
+              ? t('verbio.detail')
               : app.description}
           </p>
           <p className="mt-5 text-[13px] text-ink-soft/70">
@@ -145,28 +146,23 @@ function AppDetailPanel({ app, onClose }: { app: AppEntry; onClose: () => void }
         </div>
 
         <div className="flex flex-wrap items-center gap-3 pt-1">
-          {/*
-            Per .md: never route the homepage straight to a subdomain.
-            The CTA opens the app's page at /app/:slug, which then carries
-            the platform links (web / mobile / desktop).
-          */}
           {isVerbio ? (
             <Link
               to={`/app/${app.slug}`}
               className="flex items-center justify-center rounded-xl bg-[#16a34a] px-7 py-3.5 text-[15px] font-bold text-white hover:bg-[#148f40] transition-colors shadow-sm"
             >
-              Open page →
+              {t('btn.openPage')} →
             </Link>
           ) : (
             <span className="flex items-center justify-center rounded-xl bg-edge/30 px-6 py-3.5 text-[15px] font-semibold text-ink-soft/50 cursor-default">
-              Web App — Coming Soon
+              Web App — {t('badge.soon')}
             </span>
           )}
           <span className="flex items-center justify-center rounded-xl bg-edge/20 px-5 py-3 text-[14px] font-semibold text-ink-soft/50 cursor-default">
-            iOS App — Coming Soon
+            iOS App — {t('badge.soon')}
           </span>
           <span className="flex items-center justify-center rounded-xl bg-edge/20 px-5 py-3 text-[14px] font-semibold text-ink-soft/50 cursor-default">
-            Android App — Coming Soon
+            Android App — {t('badge.soon')}
           </span>
         </div>
       </div>
@@ -181,6 +177,7 @@ function AppDetailPanel({ app, onClose }: { app: AppEntry; onClose: () => void }
 
 /* ─── HomePage ─── */
 export function HomePage() {
+  const { t } = useLanguage();
   useDocumentMeta(
     'Alf & Co Solutions — Dashboard',
     'Everyday tasks, Simple tools = Less stress. Streamline your daily operations with calm digital tools.',
@@ -195,14 +192,14 @@ export function HomePage() {
 
   return (
     <>
-      {/* Main hero section — fits in one viewport */}
+      {/* Main hero section */}
       <section className="mx-auto max-w-6xl px-6 pt-6 sm:pt-8 lg:pt-10">
-        <div className="flex flex-col lg:flex-row items-center justify-between gap-6 lg:gap-4">
+        <div className="flex flex-col lg:flex-row items-center justify-between gap-6 lg:gap-8">
 
           {/* Left side: Capybara with floating app icon tiles */}
           <div className="relative w-full lg:w-[55%] flex justify-center" style={{ minHeight: '380px' }}>
 
-            {/* Decorative twinkling stars — 4 around the capybara (per mockup). */}
+            {/* Decorative twinkling stars */}
             <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
               <GoldenStar size="w-3 h-3"     className="absolute top-[8%]  left-[30%]" style={{ animationDelay: '0s',   animationDuration: '2.4s' }} />
               <GoldenStar size="w-2.5 h-2.5" className="absolute top-[4%]  left-[52%]" style={{ animationDelay: '0.7s', animationDuration: '2.8s' }} />
@@ -210,8 +207,7 @@ export function HomePage() {
               <GoldenStar size="w-2.5 h-2.5" className="absolute top-[22%] left-[64%]" style={{ animationDelay: '0.4s', animationDuration: '2.1s' }} />
             </div>
 
-            {/* Desktop: Large floating app-icon tiles around capybara.
-                Each drifts on its own rhythm; hovering/selecting freezes it. */}
+            {/* Desktop: Large floating app-icon tiles around capybara. */}
             <div className="hidden lg:block">
               {catalog.map((app, i) => {
                 const pos = iconPositions[i];
@@ -230,7 +226,6 @@ export function HomePage() {
                       bottom: pos.bottom,
                       animationDelay: pos.delay,
                       animationDuration: pos.duration,
-                      /* Freeze the float when this tile is the active one. */
                       animationPlayState: isSelected ? 'paused' : undefined,
                     }}
                   >
@@ -244,21 +239,9 @@ export function HomePage() {
                         backgroundColor: bg,
                         border: `3px solid ${borderColor}`,
                         boxShadow: isSelected
-                          ? '0 8px 24px rgba(0,0,0,0.12)'
+                          ? '4px 4px 0 #d97706'
                           : '0 2px 8px rgba(0,0,0,0.06)',
                         transform: isSelected ? 'scale(1.1)' : 'scale(1)',
-                      }}
-                      onMouseEnter={e => {
-                        if (!isSelected) {
-                          (e.currentTarget as HTMLButtonElement).style.transform = 'scale(1.08)';
-                          (e.currentTarget as HTMLButtonElement).style.boxShadow = '0 6px 20px rgba(0,0,0,0.1)';
-                        }
-                      }}
-                      onMouseLeave={e => {
-                        if (!isSelected) {
-                          (e.currentTarget as HTMLButtonElement).style.transform = 'scale(1)';
-                          (e.currentTarget as HTMLButtonElement).style.boxShadow = '0 2px 8px rgba(0,0,0,0.06)';
-                        }
                       }}
                       aria-label={`Open ${appLabels[app.slug]} details`}
                     >
@@ -272,7 +255,7 @@ export function HomePage() {
               })}
             </div>
 
-            {/* Capybara image — 2D cartoon style, static (per request). */}
+            {/* Capybara mascot image */}
             <img
               src="/capybara-main.jpg"
               alt="Capybara mascot peacefully working at a desk with a two-handled cup"
@@ -283,14 +266,17 @@ export function HomePage() {
 
           {/* Right side: Headline text */}
           <div className="w-full lg:w-[43%] text-center lg:text-left">
-            <h1 className="font-sans text-[42px] leading-[1.08] font-black tracking-tight text-[#0f212e] sm:text-[52px] lg:text-[58px]">
-              Everyday tasks,<br/>Simple tools
+            <div className="inline-block px-3 py-1 bg-amber-100/80 text-amber-800 rounded-full text-xs font-semibold mb-4 border border-amber-200 shadow-xs">
+              <span>{t('hero.badge')}</span>
+            </div>
+            <h1 className="font-sans text-[36px] leading-[1.1] font-black tracking-tight text-[#0f212e] sm:text-[48px] lg:text-[54px]">
+              {t('hero.title')}
             </h1>
-            <p className="mt-5 text-[17px] leading-relaxed text-ink-soft max-w-[420px] mx-auto lg:mx-0">
-              Simplify your workflow and boost productivity with our intuitive platform.
+            <p className="mt-4 text-[15px] leading-relaxed text-ink-soft max-w-[460px] mx-auto lg:mx-0">
+              {t('hero.desc')}
             </p>
-            <p className="mt-3 text-[13px] italic text-ink-soft/60">
-              Less stress. More calm.
+            <p className="mt-3 text-[13px] italic font-medium text-clay">
+              {t('hero.motto')}
             </p>
           </div>
         </div>
@@ -315,7 +301,7 @@ export function HomePage() {
                       backgroundColor: bg,
                       border: `3px solid ${borderColor}`,
                       boxShadow: isSelected
-                        ? '0 6px 20px rgba(0,0,0,0.1)'
+                        ? '3px 3px 0 #d97706'
                         : '0 2px 8px rgba(0,0,0,0.05)',
                       transform: isSelected ? 'scale(1.08)' : 'scale(1)',
                     }}
@@ -339,28 +325,28 @@ export function HomePage() {
       </section>
 
       {/* Ko-fi link */}
-      <section className="mx-auto max-w-6xl px-6 py-5 text-center">
+      <section className="mx-auto max-w-6xl px-6 py-6 text-center">
         <a
           href="https://ko-fi.com/alfcosolutions"
           target="_blank"
           rel="noopener noreferrer"
-          className="text-[14px] font-bold text-ink-soft/70 hover:text-clay underline transition-colors"
+          className="inline-flex items-center gap-2 text-[14px] font-bold text-ink-soft hover:text-clay transition-colors group"
         >
-          Buy us a coffee on Ko-fi ☕
+          <span>{t('footer.kofi')}</span>
         </a>
       </section>
 
-      {/* Bottom CTA bubble (matching mockup — simple blue bubble, no 3D banner) */}
+      {/* Bottom CTA bubble */}
       <section className="mx-auto max-w-3xl px-6 pb-8">
         <div
-          className="rounded-2xl px-8 py-5 text-center"
+          className="rounded-2xl px-8 py-5 text-center shadow-card border border-blue-200/50"
           style={{
             backgroundColor: '#dbeafe',
             color: '#1e3a5f',
           }}
         >
-          <p className="text-[16px] font-medium">
-            Join us and make work effortless. Start your journey today.
+          <p className="text-[15px] font-semibold">
+            {t('cta.join')}
           </p>
         </div>
       </section>
