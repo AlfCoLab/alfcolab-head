@@ -79,10 +79,10 @@ function GoldenStar({
 }
 
 const iconPositions = [
-  { top: '12%',  left: '2%',     delay: '0s',   duration: '3.2s' },  // Verbio
-  { top: '4%',   left: '42%',    delay: '0.6s', duration: '3.6s' },  // Notes
-  { bottom: '30%', right: '0%',  delay: '1.2s', duration: '3.0s' },  // Habits
-  { bottom: '48%', left: '-4%',  delay: '1.8s', duration: '3.8s' },  // Tracker
+  { top: '4%',  left: '0%',   right: undefined, bottom: undefined, delay: '0s',   duration: '3.2s' },  // Verbio (Top-Left)
+  { top: '4%',  left: undefined, right: '0%',   bottom: undefined, delay: '0.6s', duration: '3.6s' },  // Notes (Top-Right)
+  { top: undefined, left: undefined, right: '0%', bottom: '8%',    delay: '1.2s', duration: '3.0s' },  // Habits (Bottom-Right)
+  { top: undefined, left: '0%',   right: undefined, bottom: '8%',    delay: '1.8s', duration: '3.8s' },  // Tracker (Bottom-Left)
 ];
 
 const appLabels: Record<string, string> = {
@@ -229,7 +229,7 @@ export function HomePage() {
                     >
                       <AppIconLarge slug={app.slug} />
                     </button>
-                    <span className="text-xs font-semibold text-ink-soft select-none mt-1">
+                    <span className="text-xs font-semibold text-ink-soft select-none whitespace-nowrap mt-1">
                       {appLabels[app.slug]}
                     </span>
                   </div>
