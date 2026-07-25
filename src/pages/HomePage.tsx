@@ -5,14 +5,13 @@ import { useDocumentMeta } from '../hooks/useDocumentMeta';
 import { useLanguage } from '../context/LanguageContext';
 import type { AppEntry } from '../types';
 
-/* ─── Large filled app-icon SVGs (iOS-style, matching mockup) ─── */
+/* ─── Large filled app-icon SVGs ─── */
 function AppIconLarge({ slug }: { slug: string }) {
   const size = 36;
   const common = { width: size, height: size, viewBox: '0 0 24 24', fill: 'none', strokeLinecap: 'round' as const, strokeLinejoin: 'round' as const };
 
   switch (slug) {
     case 'verbio':
-      // Book icon — filled green
       return (
         <svg {...common}>
           <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" stroke="#15803d" strokeWidth="2" />
@@ -21,7 +20,6 @@ function AppIconLarge({ slug }: { slug: string }) {
         </svg>
       );
     case 'app-2':
-      // Document/Notes icon — filled orange
       return (
         <svg {...common}>
           <rect x="4" y="2" width="16" height="20" rx="2" fill="#ea580c" fillOpacity="0.15" stroke="#ea580c" strokeWidth="2" />
@@ -29,7 +27,6 @@ function AppIconLarge({ slug }: { slug: string }) {
         </svg>
       );
     case 'app-3':
-      // Chart/Analytics icon — filled green
       return (
         <svg {...common}>
           <rect x="2" y="2" width="20" height="20" rx="3" fill="#16a34a" fillOpacity="0.12" stroke="none" />
@@ -41,7 +38,6 @@ function AppIconLarge({ slug }: { slug: string }) {
         </svg>
       );
     case 'app-4':
-      // People/Community icon — filled blue
       return (
         <svg {...common}>
           <circle cx="9" cy="7" r="3.5" fill="#2563eb" fillOpacity="0.2" stroke="#2563eb" strokeWidth="1.5" />
@@ -60,7 +56,7 @@ function AppIconLarge({ slug }: { slug: string }) {
   }
 }
 
-/* Decorative Golden Star — twinkles (opacity pulse). */
+/* Decorative Golden Star */
 function GoldenStar({
   className,
   style,
@@ -82,15 +78,13 @@ function GoldenStar({
   );
 }
 
-/* Icon positions around the capybara (desktop) — matching mockup layout. */
 const iconPositions = [
-  { top: '12%',  left: '2%',     delay: '0s',   duration: '3.2s' },  // Top-left (Verbio)
-  { top: '4%',   left: '42%',    delay: '0.6s', duration: '3.6s' },  // Top-center (Notes)
-  { bottom: '30%', right: '0%',  delay: '1.2s', duration: '3.0s' },  // Right-middle (Analytics/Habits)
-  { bottom: '48%', left: '-4%',  delay: '1.8s', duration: '3.8s' },  // Left-bottom (Tracker)
+  { top: '12%',  left: '2%',     delay: '0s',   duration: '3.2s' },  // Verbio
+  { top: '4%',   left: '42%',    delay: '0.6s', duration: '3.6s' },  // Notes
+  { bottom: '30%', right: '0%',  delay: '1.2s', duration: '3.0s' },  // Habits
+  { bottom: '48%', left: '-4%',  delay: '1.8s', duration: '3.8s' },  // Tracker
 ];
 
-/* Human-readable labels for the app icons */
 const appLabels: Record<string, string> = {
   'verbio': 'Verbio',
   'app-2': 'Notes',
@@ -98,15 +92,13 @@ const appLabels: Record<string, string> = {
   'app-4': 'Tracker',
 };
 
-/* Pastel background colors for each icon tile */
 const iconBgColors: Record<string, string> = {
-  'verbio': '#dbeafe',   // Soft blue
-  'app-2': '#fff1e0',    // Soft peach/orange
-  'app-3': '#dcfce7',    // Soft green
-  'app-4': '#f3e8ff',    // Soft purple
+  'verbio': '#dbeafe',
+  'app-2': '#fff1e0',
+  'app-3': '#dcfce7',
+  'app-4': '#f3e8ff',
 };
 
-/* Border colors for selected state */
 const iconBorderSelected: Record<string, string> = {
   'verbio': '#0284c7',
   'app-2': '#d97706',
@@ -114,13 +106,13 @@ const iconBorderSelected: Record<string, string> = {
   'app-4': '#9333ea',
 };
 
-/* ─── Detail panel (matching expanded mockup) ─── */
+/* ─── Detail panel ─── */
 function AppDetailPanel({ app, onClose }: { app: AppEntry; onClose: () => void }) {
   const { t } = useLanguage();
   const isVerbio = app.slug === 'verbio';
   return (
     <div
-      className="animate-panel-expand mt-8 mx-auto max-w-5xl rounded-2xl bg-card border-2 p-8 md:p-10"
+      className="animate-panel-expand mt-6 mx-auto max-w-5xl rounded-2xl bg-card border-2 p-6 sm:p-8"
       style={{
         animationDuration: '0.3s',
         borderColor: '#d97706',
@@ -129,15 +121,13 @@ function AppDetailPanel({ app, onClose }: { app: AppEntry; onClose: () => void }
     >
       <div className="flex flex-col md:flex-row md:items-start justify-between gap-6">
         <div className="flex-1 min-w-0">
-          <h3 className="font-sans text-3xl font-extrabold text-ink tracking-tight">
+          <h3 className="font-sans text-2xl font-extrabold text-ink tracking-tight">
             {appLabels[app.slug] || app.name}
           </h3>
-          <p className="mt-3 text-[16px] text-ink-soft leading-relaxed max-w-xl">
-            {isVerbio
-              ? t('verbio.detail')
-              : app.description}
+          <p className="mt-2 text-[15px] text-ink-soft leading-relaxed max-w-xl">
+            {isVerbio ? t('verbio.detail') : app.description}
           </p>
-          <p className="mt-5 text-[13px] text-ink-soft/70">
+          <p className="mt-4 text-xs text-ink-soft/70">
             Request access:{' '}
             <a href="mailto:mail@alfcolab.com" className="text-clay hover:underline font-semibold">
               mail@alfcolab.com
@@ -149,25 +139,19 @@ function AppDetailPanel({ app, onClose }: { app: AppEntry; onClose: () => void }
           {isVerbio ? (
             <Link
               to={`/app/${app.slug}`}
-              className="flex items-center justify-center rounded-xl bg-[#16a34a] px-7 py-3.5 text-[15px] font-bold text-white hover:bg-[#148f40] transition-colors shadow-sm"
+              className="flex items-center justify-center rounded-xl bg-[#16a34a] px-6 py-3 text-sm font-bold text-white hover:bg-[#148f40] transition-colors shadow-sm"
             >
               {t('btn.openPage')} →
             </Link>
           ) : (
-            <span className="flex items-center justify-center rounded-xl bg-edge/30 px-6 py-3.5 text-[15px] font-semibold text-ink-soft/50 cursor-default">
+            <span className="flex items-center justify-center rounded-xl bg-edge/30 px-5 py-3 text-sm font-semibold text-ink-soft/50 cursor-default">
               Web App — {t('badge.soon')}
             </span>
           )}
-          <span className="flex items-center justify-center rounded-xl bg-edge/20 px-5 py-3 text-[14px] font-semibold text-ink-soft/50 cursor-default">
-            iOS App — {t('badge.soon')}
-          </span>
-          <span className="flex items-center justify-center rounded-xl bg-edge/20 px-5 py-3 text-[14px] font-semibold text-ink-soft/50 cursor-default">
-            Android App — {t('badge.soon')}
-          </span>
         </div>
       </div>
-      <div className="mt-6 flex justify-end">
-        <button onClick={onClose} className="text-[13px] font-bold text-ink-soft/60 hover:text-clay transition-colors cursor-pointer">
+      <div className="mt-4 flex justify-end">
+        <button onClick={onClose} className="text-xs font-bold text-ink-soft/60 hover:text-clay transition-colors cursor-pointer">
           Close panel
         </button>
       </div>
@@ -192,14 +176,12 @@ export function HomePage() {
 
   return (
     <>
-      {/* Main hero section */}
+      {/* Hero section */}
       <section className="mx-auto max-w-6xl px-6 pt-6 sm:pt-8 lg:pt-10">
         <div className="flex flex-col lg:flex-row items-center justify-between gap-6 lg:gap-8">
 
           {/* Left side: Capybara with floating app icon tiles */}
-          <div className="relative w-full lg:w-[55%] flex justify-center" style={{ minHeight: '380px' }}>
-
-            {/* Decorative twinkling stars */}
+          <div className="relative w-full lg:w-[52%] flex justify-center" style={{ minHeight: '360px' }}>
             <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
               <GoldenStar size="w-3 h-3"     className="absolute top-[8%]  left-[30%]" style={{ animationDelay: '0s',   animationDuration: '2.4s' }} />
               <GoldenStar size="w-2.5 h-2.5" className="absolute top-[4%]  left-[52%]" style={{ animationDelay: '0.7s', animationDuration: '2.8s' }} />
@@ -207,7 +189,7 @@ export function HomePage() {
               <GoldenStar size="w-2.5 h-2.5" className="absolute top-[22%] left-[64%]" style={{ animationDelay: '0.4s', animationDuration: '2.1s' }} />
             </div>
 
-            {/* Desktop: Large floating app-icon tiles around capybara. */}
+            {/* Desktop: Floating app-icon tiles */}
             <div className="hidden lg:block">
               {catalog.map((app, i) => {
                 const pos = iconPositions[i];
@@ -233,9 +215,9 @@ export function HomePage() {
                       onClick={() => handleIconClick(app)}
                       className="flex items-center justify-center cursor-pointer transition-[transform,box-shadow,border-color] duration-300 ease-out"
                       style={{
-                        width: '80px',
-                        height: '80px',
-                        borderRadius: '22px',
+                        width: '76px',
+                        height: '76px',
+                        borderRadius: '20px',
                         backgroundColor: bg,
                         border: `3px solid ${borderColor}`,
                         boxShadow: isSelected
@@ -247,7 +229,7 @@ export function HomePage() {
                     >
                       <AppIconLarge slug={app.slug} />
                     </button>
-                    <span className="text-[13px] font-semibold text-ink-soft select-none mt-1">
+                    <span className="text-xs font-semibold text-ink-soft select-none mt-1">
                       {appLabels[app.slug]}
                     </span>
                   </div>
@@ -259,17 +241,17 @@ export function HomePage() {
             <img
               src="/capybara-main.jpg"
               alt="Capybara mascot peacefully working at a desk with a two-handled cup"
-              className="w-full max-w-[320px] lg:max-w-[360px] object-contain relative z-0"
+              className="w-full max-w-[300px] lg:max-w-[340px] object-contain relative z-0"
               style={{ mixBlendMode: 'multiply' }}
             />
           </div>
 
           {/* Right side: Headline text */}
-          <div className="w-full lg:w-[43%] text-center lg:text-left">
+          <div className="w-full lg:w-[46%] text-center lg:text-left">
             <div className="inline-block px-3 py-1 bg-amber-100/80 text-amber-800 rounded-full text-xs font-semibold mb-4 border border-amber-200 shadow-xs">
               <span>{t('hero.badge')}</span>
             </div>
-            <h1 className="font-sans text-[36px] leading-[1.1] font-black tracking-tight text-[#0f212e] sm:text-[48px] lg:text-[54px]">
+            <h1 className="font-sans text-[36px] leading-[1.1] font-black tracking-tight text-[#0f212e] sm:text-[46px] lg:text-[52px]">
               {t('hero.title')}
             </h1>
             <p className="mt-4 text-[15px] leading-relaxed text-ink-soft max-w-[460px] mx-auto lg:mx-0">
@@ -281,47 +263,115 @@ export function HomePage() {
           </div>
         </div>
 
-        {/* Mobile: 2×2 icon grid below capybara */}
-        <div className="lg:hidden mt-8 max-w-xs mx-auto">
-          <div className="grid grid-cols-2 gap-5 justify-items-center">
-            {catalog.map((app) => {
-              const isSelected = selectedApp?.slug === app.slug;
-              const bg = iconBgColors[app.slug] || '#f3f4f6';
-              const borderColor = isSelected ? (iconBorderSelected[app.slug] || '#d97706') : 'transparent';
-
-              return (
-                <div key={app.slug} className="flex flex-col items-center gap-2">
-                  <button
-                    onClick={() => handleIconClick(app)}
-                    className="flex items-center justify-center cursor-pointer transition-all duration-300"
-                    style={{
-                      width: '76px',
-                      height: '76px',
-                      borderRadius: '20px',
-                      backgroundColor: bg,
-                      border: `3px solid ${borderColor}`,
-                      boxShadow: isSelected
-                        ? '3px 3px 0 #d97706'
-                        : '0 2px 8px rgba(0,0,0,0.05)',
-                      transform: isSelected ? 'scale(1.08)' : 'scale(1)',
-                    }}
-                    aria-label={`Open ${appLabels[app.slug]} details`}
-                  >
-                    <AppIconLarge slug={app.slug} />
-                  </button>
-                  <span className="text-[12px] font-semibold text-ink-soft select-none">
-                    {appLabels[app.slug]}
-                  </span>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Expanded detail panel */}
+        {/* Selected App Detail Panel */}
         {selectedApp && (
           <AppDetailPanel app={selectedApp} onClose={() => setSelectedApp(null)} />
         )}
+
+        {/* Bottom 4 Compact App Cards Grid (Matching mockup cards) */}
+        <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {/* Card 1: Verbio */}
+          <Link
+            to="/app/verbio"
+            className="rounded-2xl bg-card border-2 border-edge p-4 hover:border-blue-400 transition-all group flex flex-col justify-between"
+            style={{ boxShadow: '4px 4px 0 #d97706' }}
+          >
+            <div>
+              <div className="flex justify-between items-center mb-3">
+                <div className="w-10 h-10 rounded-xl bg-blue-500 text-white font-extrabold flex items-center justify-center text-lg shadow-sm">
+                  V
+                </div>
+                <span className="inline-flex items-center gap-1.5 text-xs font-bold text-blue-700 bg-blue-50 px-2.5 py-0.5 rounded-full border border-blue-200">
+                  <span className="w-1.5 h-1.5 bg-blue-500 rounded-full animate-pulse"></span>
+                  {t('badge.beta')}
+                </span>
+              </div>
+              <h3 className="font-sans text-lg font-bold text-ink">Verbio</h3>
+              <p className="text-xs text-ink-soft mt-1 leading-relaxed">
+                {t('app.verbio.desc')}
+              </p>
+            </div>
+            <div className="mt-4 flex items-center text-xs font-bold text-blue-600 group-hover:translate-x-1 transition-transform">
+              <span>{t('btn.openPage')}</span>
+              <span className="ml-1">→</span>
+            </div>
+          </Link>
+
+          {/* Card 2: Notes */}
+          <div
+            className="rounded-2xl bg-card border-2 border-edge/60 p-4 opacity-80 flex flex-col justify-between"
+            style={{ boxShadow: '4px 4px 0 #d97706' }}
+          >
+            <div>
+              <div className="flex justify-between items-center mb-3">
+                <div className="w-10 h-10 rounded-xl bg-purple-500 text-white font-extrabold flex items-center justify-center text-lg shadow-sm">
+                  N
+                </div>
+                <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-stone-600 bg-stone-100 px-2.5 py-0.5 rounded-full border border-stone-200">
+                  <span className="w-1.5 h-1.5 bg-stone-400 rounded-full"></span>
+                  {t('badge.soon')}
+                </span>
+              </div>
+              <h3 className="font-sans text-lg font-bold text-ink">{t('app.notes.name')}</h3>
+              <p className="text-xs text-ink-soft mt-1 leading-relaxed">
+                {t('app.notes.desc')}
+              </p>
+            </div>
+            <div className="mt-4 text-xs font-semibold text-ink-soft/60">
+              {t('badge.inDev')}
+            </div>
+          </div>
+
+          {/* Card 3: Habits */}
+          <div
+            className="rounded-2xl bg-card border-2 border-edge/60 p-4 opacity-80 flex flex-col justify-between"
+            style={{ boxShadow: '4px 4px 0 #d97706' }}
+          >
+            <div>
+              <div className="flex justify-between items-center mb-3">
+                <div className="w-10 h-10 rounded-xl bg-green-500 text-white font-extrabold flex items-center justify-center text-lg shadow-sm">
+                  H
+                </div>
+                <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-stone-600 bg-stone-100 px-2.5 py-0.5 rounded-full border border-stone-200">
+                  <span className="w-1.5 h-1.5 bg-stone-400 rounded-full"></span>
+                  {t('badge.soon')}
+                </span>
+              </div>
+              <h3 className="font-sans text-lg font-bold text-ink">{t('app.habits.name')}</h3>
+              <p className="text-xs text-ink-soft mt-1 leading-relaxed">
+                {t('app.habits.desc')}
+              </p>
+            </div>
+            <div className="mt-4 text-xs font-semibold text-ink-soft/60">
+              {t('badge.inDev')}
+            </div>
+          </div>
+
+          {/* Card 4: Tracker */}
+          <div
+            className="rounded-2xl bg-card border-2 border-edge/60 p-4 opacity-80 flex flex-col justify-between"
+            style={{ boxShadow: '4px 4px 0 #d97706' }}
+          >
+            <div>
+              <div className="flex justify-between items-center mb-3">
+                <div className="w-10 h-10 rounded-xl bg-amber-500 text-white font-extrabold flex items-center justify-center text-lg shadow-sm">
+                  T
+                </div>
+                <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-stone-600 bg-stone-100 px-2.5 py-0.5 rounded-full border border-stone-200">
+                  <span className="w-1.5 h-1.5 bg-stone-400 rounded-full"></span>
+                  {t('badge.soon')}
+                </span>
+              </div>
+              <h3 className="font-sans text-lg font-bold text-ink">{t('app.tracker.name')}</h3>
+              <p className="text-xs text-ink-soft mt-1 leading-relaxed">
+                {t('app.tracker.desc')}
+              </p>
+            </div>
+            <div className="mt-4 text-xs font-semibold text-ink-soft/60">
+              {t('badge.inDev')}
+            </div>
+          </div>
+        </div>
       </section>
 
       {/* Ko-fi link */}
