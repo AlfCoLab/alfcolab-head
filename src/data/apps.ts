@@ -78,23 +78,4 @@ export const apps: AppEntry[] = [
     desktopDownloadUrl: null,
     statusLabel: 'under construction',
   },
-  {
-    // The hub itself — referenced by spec section "/app/head".
-    slug: 'head',
-    name: 'HEAD',
-    status: 'ready',
-    category: 'platform',
-    humanActivity: 'Navigating apps',
-    shortDescription: 'The central hub and catalog for Alfcolab.',
-    description:
-      'HEAD is alfcolab.com — the calm front door to every Alfcolab app, site, and experiment. It is the single place to see what is ready, what is in beta, and what is still being shaped.',
-    tagline: 'The central hub for Alfcolab apps.',
-    accentColor: '#0F212E',
-    showInCatalog: true,
-    requiresAuth: false,
-    webUrl: 'https://alfcolab.com',
-    mobileStoreUrls: { ios: null, android: null },
-    desktopDownloadUrl: null,
-    statusLabel: null,
-  },
 ];

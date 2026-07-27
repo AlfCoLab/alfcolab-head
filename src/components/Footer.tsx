@@ -28,7 +28,7 @@ export function Footer() {
             Projects
           </Link>
           <Link
-            to="/app/head"
+            to="/about"
             className="hover:text-amber-800 transition-colors"
             title="About Alf&Co LAB"
           >

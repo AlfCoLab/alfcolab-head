@@ -13,6 +13,7 @@ const translations: Record<Language, Record<string, string>> = {
     // Header & Nav
     'nav.dashboard': 'Dashboard',
     'nav.projects': 'Projects',
+    'nav.about': 'About',
     'nav.backToLab': 'Back to Alf&Co LAB',
     
     // Hero
@@ -52,11 +53,20 @@ const translations: Record<Language, Record<string, string>> = {
     'footer.madeWithCare': 'Made with care for people',
     'footer.kofi': 'Buy us a coffee on Ko-fi ☕',
     'cta.join': 'Join us and make work effortless. Start your journey today.',
+
+    // About Page
+    'about.title': 'About Alf&Co LAB',
+    'about.subtitle': 'Everyday tasks, Simple tools = Less stress.',
+    'about.p1': 'Alf&Co LAB is a digital laboratory focused on creating calm, lightweight tools for everyday people. We build software that helps you focus on what matters: studying, organizing notes, tracking habits, and managing routine tasks without unnecessary noise or complexity.',
+    'about.p2': 'Our mascot is the Capybara — the universal symbol of calm productivity, friendly support, and steady progress.',
+    'about.contactHeading': 'Get in touch',
+    'about.contactDesc': 'Have an idea, feedback, or access request? Reach out anytime at:',
   },
   it: {
     // Header & Nav
     'nav.dashboard': 'Dashboard',
     'nav.projects': 'Progetti',
+    'nav.about': 'Su di noi',
     'nav.backToLab': 'Torna ad Alf&Co LAB',
     
     // Hero
@@ -96,6 +106,14 @@ const translations: Record<Language, Record<string, string>> = {
     'footer.madeWithCare': 'Fatto con cura per le persone',
     'footer.kofi': 'Offrici un caffè su Ko-fi ☕',
     'cta.join': 'Unisciti a noi e rendi il lavoro un gioco da ragazzi. Inizia oggi.',
+
+    // About Page
+    'about.title': 'Su Alf&Co LAB',
+    'about.subtitle': 'Strumenti semplici per compiti quotidiani = Meno stress.',
+    'about.p1': 'Alf&Co LAB è un laboratorio digitale dedicato alla creazione di strumenti semplici e leggeri per le persone comuni. Realizziamo software che ti aiuta a concentrarti su ciò che conta: studiare, organizzare appunti, tracciare abitudini e gestire i compiti quotidiani senza rumori o complessità inutili.',
+    'about.p2': 'Il nostro маскот è il Capibara — simbolo universale di produttività serena, supporto amichevole e progresso costante.',
+    'about.contactHeading': 'Contattaci',
+    'about.contactDesc': 'Hai un’idea, un feedback o vuoi richiedere l’accesso? Scrivici in qualsiasi momento a:',
   },
 };
 
